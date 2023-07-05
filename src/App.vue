@@ -4,97 +4,85 @@ import { computed, onMounted, ref, watch, type Ref } from 'vue';
 import { Question } from './models/Question'
 
 let questions = ref<Array<Question>>()
+let currentQuestion : Ref<Question>|Ref<undefined> = ref()
 
 onMounted(async () => {
   questions.value = await getQuestions()
-  console.log(questions.value)
-
+  currentQuestion.value = questions.value[0]
 });
-
-/* let questionsSize = computed(() => questions.value.length)
-let slowSize = ref(0)
-
-let increment = (n: Ref<number>, limit: number) => {
-  if (n.value != limit) {
-    n.value = n.value + 1
-    setTimeout(increment, 100 - n.value*2, n, limit) // syntax is (callbackfn, delay, ...args)
-  }
-}
-
-watch(questionsSize, (newVal, _) => {
-  setTimeout(() => {
-    increment(slowSize, newVal)
-  }, 100)
-}) */
-
 </script>
 
 <template>
-  <header>
-    Loaded {{ questions }} questions<br>
-  </header>
+  <div class="container" v-if="currentQuestion !== undefined">
+    <div class="prev-button">
+        <button>&lt;-</button>
+    </div>
+    <div class="question-area">
+      <div class="text">
+          <p>{{ currentQuestion.question.text }}</p>
+      </div>
+      <div class="answer">
+          <p>{{ currentQuestion.correctAnswer }}</p>
+      </div>
+      <div class="buttons">
+        <button class="">Right</button>
+        <button class="">Wrong</button>
+      </div>
+    </div>
+    <div class="next-button">
+        <button>-&gt;</button>
+    </div>
+  </div>
 </template>
 
 <style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-nav {
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
   width: 100%;
-  font-size: 12px;
+  height: 100vh;
+}
+
+.prev-button, .next-button {
+  width: 10%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.prev-button button, .next-button button {
+  height: 50px;
+  width: 50px;
+}
+
+.question-area {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  width: 80%;
+  height: 80%;
+  padding: 20px;
+  border: 2px solid black;
+  border-radius: 10px;
+}
+
+.text, .answer {
+  width: 100%;
   text-align: center;
-  margin-top: 2rem;
 }
 
-nav a.router-link-exact-active {
-  color: var(--color-text);
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  width: 30%;
 }
 
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
+.buttons button {
+  width: 45%;
+  padding: 10px;
 }
 </style>

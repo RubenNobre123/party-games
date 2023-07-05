@@ -14,15 +14,21 @@ onMounted(async () => {
 
 <template>
   <div class="container" v-if="currentQuestion !== undefined">
-    <div class="prev-button">
-        <button>&lt;-</button>
-    </div>
-    <div class="question-area">
-      <div class="text">
-          <p>{{ currentQuestion.question.text }}</p>
+      <div class="prev-button">
+          <button>&lt;-</button>
       </div>
-      <div class="answer">
-          <p>{{ currentQuestion.correctAnswer }}</p>
+      <div class="question-area">
+        <div class="text">
+            <p>{{ currentQuestion.question.text }}</p>
+        </div>
+        <div class="options">
+            <div class="option"><p>Option</p></div>
+            <div class="option"><p>Option</p></div>
+            <div class="option"><p>Option</p></div>
+            <div class="option"><p>Option</p></div>
+      </div>
+      <div class="hint">
+          <p>Hint: </p>
       </div>
       <div class="buttons">
         <button class="">Right</button>
@@ -38,11 +44,10 @@ onMounted(async () => {
 <style scoped>
 .container {
   display: flex;
-  justify-content: center;
+  width: 90vw;
+  max-width: 1200px;
+  margin: auto;
   align-items: center;
-  position: absolute;
-  width: 100%;
-  height: 100vh;
 }
 
 .prev-button, .next-button {
@@ -70,19 +75,48 @@ onMounted(async () => {
   border-radius: 10px;
 }
 
-.text, .answer {
-  width: 100%;
-  text-align: center;
+.text {
+  display: flex;
+  margin-bottom: 20px;
+  align-items: center;
+  justify-content: space-around;
 }
 
 .buttons {
+  width: 100%;
+  height: 20%;
+}
+.buttons button {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 10px;
+}
+.options {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
-  width: 30%;
+  width: 100%;
+  margin-bottom: 20px;
+}
+.option {
+  width: calc(50% - 10px);
+  border: 1px solid #000;
+  padding: 10px;
+  box-sizing: border-box;
+  margin-bottom: 20px;
 }
 
-.buttons button {
-  width: 45%;
-  padding: 10px;
+.hint {
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+ .option {
+    width: 80%;
+  }
+  .options {
+    display: flex;
+    justify-content: space-evenly;
+  }
 }
 </style>

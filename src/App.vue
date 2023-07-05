@@ -1,54 +1,39 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
-import { getQuestions } from './utils';
-import { onMounted, ref } from 'vue';
+import { getQuestions } from './requests';
+import { computed, onMounted, ref, watch, type Ref } from 'vue';
+import { Question } from './models/Question'
 
-type Question = {
-  category: string;
-  question: Object;
-}
-
-let fetchQuestions: Promise<any>
 let questions = ref<Array<Question>>([])
 onMounted(() => {
-  fetchQuestions = getQuestions()
-  fetchQuestions.then(data => {
-    questions.value = data
-  })
+  getQuestions(questions)
 })
+
+let questionsSize = computed(() => questions.value.length)
+let slowSize = ref(0)
+
+let increment = (n: Ref<number>, limit: number) => {
+  if (n.value != limit) {
+    n.value = n.value + 1
+    setTimeout(increment, 100 - n.value*2, n, limit) // syntax is (callbackfn, delay, ...args)
+  }
+}
+
+watch(questionsSize, (newVal, _) => {
+  setTimeout(() => {
+    increment(slowSize, newVal)
+  }, 100)
+})
+
 </script>
 
 <template>
   <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
+    Loaded {{ slowSize }} questions<br>
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
   </header>
-
-  <div class="box">
-    <div v-for="entry in questions" class="line">
-      <h1>{{ entry.category }}</h1>
-      <p>{{ entry.question.text }}</p>
-    </div>
-  </div>
 </template>
 
 <style scoped>
-.box {
-  top: 10%;
-  height: 80%;
-  width: 35%;
-  left: 55%;
-  position: absolute;
-}
 header {
   line-height: 1.5;
   max-height: 100vh;

@@ -1,9 +1,11 @@
-import type { Ref } from "vue"
-import type { Question } from "./models/Question"
+import { Question } from "./models/Question"
 
 async function getQuestions() {
+    let questionArray: Array<Question> = []
     const response = await fetch('https://the-trivia-api.com/v2/questions?difficulties=easy&limit=50')
-    return await response.json()
+        .then(response => response.json())
+        .then(data => data.forEach(question => questionArray.push(new Question(question))))
+    return await questionArray
 }
 
 async function translateQuestion(question: string) {
@@ -21,6 +23,5 @@ async function translateQuestion(question: string) {
 }
 
 export {
-    getQuestions,
-    translateQuestion
+    getQuestions
 }

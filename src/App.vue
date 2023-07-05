@@ -1,9 +1,15 @@
-<script setup lang="ts">
+<script async setup lang="ts">
 import { getQuestions } from './requests';
 import { computed, onMounted, ref, watch, type Ref } from 'vue';
 import { Question } from './models/Question'
 
-let questions = ref(getQuestions())
+let questions = ref<Array<Question>>()
+
+onMounted(async () => {
+  questions.value = await getQuestions()
+  console.log(questions.value)
+
+});
 
 /* let questionsSize = computed(() => questions.value.length)
 let slowSize = ref(0)

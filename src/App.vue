@@ -1,6 +1,22 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
+import { getQuestions } from './utils';
+import { onMounted, ref } from 'vue';
+
+type Question = {
+  category: string;
+  question: Object;
+}
+
+let fetchQuestions: Promise<any>
+let questions = ref<Array<Question>>([])
+onMounted(() => {
+  fetchQuestions = getQuestions()
+  fetchQuestions.then(data => {
+    questions.value = data
+  })
+})
 </script>
 
 <template>
@@ -17,10 +33,22 @@ import HelloWorld from './components/HelloWorld.vue'
     </div>
   </header>
 
-  <RouterView />
+  <div class="box">
+    <div v-for="entry in questions" class="line">
+      <h1>{{ entry.category }}</h1>
+      <p>{{ entry.question.text }}</p>
+    </div>
+  </div>
 </template>
 
 <style scoped>
+.box {
+  top: 10%;
+  height: 80%;
+  width: 35%;
+  left: 55%;
+  position: absolute;
+}
 header {
   line-height: 1.5;
   max-height: 100vh;

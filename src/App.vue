@@ -3,12 +3,9 @@ import { getQuestions } from './requests';
 import { computed, onMounted, ref, watch, type Ref } from 'vue';
 import { Question } from './models/Question'
 
-let questions = ref<Array<Question>>([])
-onMounted(() => {
-  getQuestions(questions)
-})
+let questions = ref(getQuestions())
 
-let questionsSize = computed(() => questions.value.length)
+/* let questionsSize = computed(() => questions.value.length)
 let slowSize = ref(0)
 
 let increment = (n: Ref<number>, limit: number) => {
@@ -22,14 +19,13 @@ watch(questionsSize, (newVal, _) => {
   setTimeout(() => {
     increment(slowSize, newVal)
   }, 100)
-})
+}) */
 
 </script>
 
 <template>
   <header>
-    Loaded {{ slowSize }} questions<br>
-
+    Loaded {{ questions }} questions<br>
   </header>
 </template>
 
